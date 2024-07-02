@@ -37,6 +37,7 @@ import { LoggerModule } from 'nestjs-pino';
                     singleLine: true,
                   },
                 },
+            level: isProduction ? 'info' : 'debug',
           },
         };
       },
