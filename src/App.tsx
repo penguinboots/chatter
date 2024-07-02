@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import React from "react";
+import Auth from "./components/auth/Auth";
 
 const darkTheme = createTheme({
   palette: {
@@ -18,6 +18,7 @@ function App() {
       <CssBaseline />
       <Container>
         <h1>Chatter UI</h1>
+        <Auth />
       </Container>
     </ThemeProvider>
   );
