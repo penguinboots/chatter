@@ -1,8 +1,12 @@
 import Typography from "@mui/material/Typography";
 import ForumIcon from "@mui/icons-material/Forum";
 import router from "../Routes";
+import { useReactiveVar } from "@apollo/client";
+import { authenticatedVar } from "../../constants/authenticated";
 
 export function Branding({ variant }: { variant: "desktop" | "mobile" }) {
+  const authenticated = useReactiveVar(authenticatedVar);
+
   const typographyStyles = {
     mr: 2,
     display: {
@@ -33,7 +37,7 @@ export function Branding({ variant }: { variant: "desktop" | "mobile" }) {
       <Typography
         sx={typographyStyles}
         component="a"
-        onClick={() => (router as any).navigate("/")}
+        onClick={() => (router as any).navigate(authenticated ? "/" : "/login")}
         noWrap
       >
         CHATTER
