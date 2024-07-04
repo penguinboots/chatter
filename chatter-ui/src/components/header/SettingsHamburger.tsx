@@ -8,6 +8,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useLogout } from "../../hooks/useLogout";
+import { onLogout } from "../../utils/logout";
 
 interface SettingsHamburgerProps {
   settings: string[];
@@ -15,6 +17,9 @@ interface SettingsHamburgerProps {
 
 export function SettingsHamburger({ settings }: SettingsHamburgerProps) {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const { logout } = useLogout();
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -45,11 +50,16 @@ export function SettingsHamburger({ settings }: SettingsHamburgerProps) {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
+        <MenuItem
+          key="logout"
+          onClick={async () => {
+            await logout();
+            onLogout();
+            handleCloseUserMenu();
+          }}
+        >
+          <Typography textAlign="center">Logout</Typography>
+        </MenuItem>
       </Menu>
     </Box>
   );

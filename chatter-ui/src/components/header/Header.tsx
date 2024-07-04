@@ -5,20 +5,45 @@ import { Branding } from "./Branding";
 import { MobileHamburger } from "./MobileHamburger";
 import { Navigation } from "./Navigation";
 import { SettingsHamburger } from "./SettingsHamburger";
+import { useReactiveVar } from "@apollo/client";
+import { authenticatedVar } from "../../constants/authenticated";
+import { Page } from "../../interfaces/page.interface";
 
-const pages: string[] = ["Profile", "Messages"];
+const pages: Page[] = [
+  {
+    title: "Home",
+    path: "/",
+  },
+];
+
+const unauthenticatedPages: Page[] = [
+  {
+    title: "Login",
+    path: "/login",
+  },
+  {
+    title: "Signup",
+    path: "/signup",
+  },
+];
+
 const settings = ["Logout"];
 
 function Header() {
+  const authenticated = useReactiveVar(authenticatedVar);
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Branding variant="desktop" />
-          <MobileHamburger pages={pages} />
+          <MobileHamburger
+            pages={authenticated ? pages : unauthenticatedPages}
+          />
           <Branding variant="mobile" />
-          <Navigation pages={pages} />
-          <SettingsHamburger settings={settings} />
+          <Navigation pages={authenticated ? pages : unauthenticatedPages} />
+
+          {authenticated && <SettingsHamburger settings={settings} />}
         </Toolbar>
       </Container>
     </AppBar>

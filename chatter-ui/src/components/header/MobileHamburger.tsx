@@ -5,12 +5,14 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import router from "../Routes";
+import { Page } from "../../interfaces/page.interface";
 
-export interface NavigationProps {
-  pages: string[];
+interface MobileHamburgerProps {
+  pages: Page[];
 }
 
-export function MobileHamburger({ pages }: NavigationProps) {
+export function MobileHamburger({ pages }: MobileHamburgerProps) {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -52,8 +54,14 @@ export function MobileHamburger({ pages }: NavigationProps) {
           }}
         >
           {pages.map((page) => (
-            <MenuItem key={page} onClick={handleCloseNavMenu}>
-              <Typography textAlign="center">{page}</Typography>
+            <MenuItem
+              key={page.title}
+              onClick={() => {
+                router.navigate(page.path);
+                handleCloseNavMenu();
+              }}
+            >
+              <Typography textAlign="center">{page.title}</Typography>
             </MenuItem>
           ))}
         </Menu>
