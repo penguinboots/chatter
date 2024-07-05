@@ -25,7 +25,7 @@ export default function ChatList() {
             maxWidth: 360,
             bgcolor: "background.paper",
             maxHeight: "80vh",
-            overflow: "auto,",
+            overflow: "auto",
           }}
         >
           {data?.chats.map((chat) => (

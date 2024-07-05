@@ -17,7 +17,7 @@ export function Chat() {
   const params = useParams();
   const chatId = params.id!;
   const { data } = useGetChat({ _id: chatId });
-  const [createMessage] = useCreateMessage();
+  const [createMessage] = useCreateMessage(chatId);
   const { data: messages } = useGetMessages({ chatId: chatId });
 
   const [message, setMessage] = useState("");
@@ -60,6 +60,7 @@ export function Chat() {
           }}
           color="primary"
           sx={{ p: "10px" }}
+          disabled={message.length === 0}
         >
           <SendIcon />
         </IconButton>
