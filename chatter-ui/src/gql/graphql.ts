@@ -104,12 +104,17 @@ export type Query = {
   chat: Chat;
   chats: Array<Chat>;
   me: User;
+  messages: Array<Message>;
   user: User;
   users: Array<User>;
 };
 
 export type QueryChatArgs = {
   _id: Scalars["String"]["input"];
+};
+
+export type QueryMessagesArgs = {
+  chatId: Scalars["String"]["input"];
 };
 
 export type QueryUserArgs = {
@@ -144,6 +149,13 @@ export type ChatFragmentFragment = {
   name?: string | null;
 };
 
+export type MessageFragmentFragment = {
+  __typename?: "Message";
+  _id: string;
+  userId: string;
+  content: string;
+};
+
 export type CreateChatMutationVariables = Exact<{
   createChatInput: CreateChatInput;
 }>;
@@ -169,8 +181,8 @@ export type CreateMessageMutation = {
   createMessage: {
     __typename?: "Message";
     _id: string;
+    userId: string;
     content: string;
-    createdAt: any;
   };
 };
 
@@ -220,6 +232,20 @@ export type MeQuery = {
   me: { __typename?: "User"; _id: string; email: string };
 };
 
+export type MessagesQueryVariables = Exact<{
+  chatId: Scalars["String"]["input"];
+}>;
+
+export type MessagesQuery = {
+  __typename?: "Query";
+  messages: Array<{
+    __typename?: "Message";
+    _id: string;
+    userId: string;
+    content: string;
+  }>;
+};
+
 export const ChatFragmentFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -243,6 +269,27 @@ export const ChatFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ChatFragmentFragment, unknown>;
+export const MessageFragmentFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "MessageFragment" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Message" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "_id" } },
+          { kind: "Field", name: { kind: "Name", value: "userId" } },
+          { kind: "Field", name: { kind: "Name", value: "content" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MessageFragmentFragment, unknown>;
 export const CreateChatDocument = {
   kind: "Document",
   definitions: [
@@ -357,12 +404,29 @@ export const CreateMessageDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "_id" } },
-                { kind: "Field", name: { kind: "Name", value: "content" } },
-                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "MessageFragment" },
+                },
               ],
             },
           },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "MessageFragment" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Message" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "_id" } },
+          { kind: "Field", name: { kind: "Name", value: "userId" } },
+          { kind: "Field", name: { kind: "Name", value: "content" } },
         ],
       },
     },
@@ -564,3 +628,73 @@ export const MeDocument = {
     },
   ],
 } as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const MessagesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Messages" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "chatId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "messages" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "chatId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "chatId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "MessageFragment" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "MessageFragment" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Message" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "_id" } },
+          { kind: "Field", name: { kind: "Name", value: "userId" } },
+          { kind: "Field", name: { kind: "Name", value: "content" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MessagesQuery, MessagesQueryVariables>;

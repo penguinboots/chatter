@@ -3,10 +3,25 @@ import { ChatsRepository } from '../chats.respository';
 import { CreateMessageInput } from './dto/create-message.input';
 import { Message } from './entities/message.entity';
 import { Types } from 'mongoose';
+import { GetMessagesArgs } from './dto/get-messages.args';
 
 @Injectable()
 export class MessagesService {
   constructor(private readonly chatsRepository: ChatsRepository) {}
+
+  private userChatFilter(userId: string) {
+    return {
+      // Confirm access
+      $or: [
+        { userId },
+        {
+          userIds: {
+            $in: [userId],
+          },
+        },
+      ],
+    };
+  }
 
   async createMessage({ content, chatId }: CreateMessageInput, userId: string) {
     const message: Message = {
@@ -20,15 +35,7 @@ export class MessagesService {
       {
         // Find chat
         _id: chatId,
-        // Confirm access
-        $or: [
-          { userId },
-          {
-            userIds: {
-              $in: [userId],
-            },
-          },
-        ],
+        ...this.userChatFilter(userId),
       },
       {
         // Add message
@@ -39,5 +46,14 @@ export class MessagesService {
     );
 
     return message;
+  }
+
+  async getMessages({ chatId }: GetMessagesArgs, userId: string) {
+    return (
+      await this.chatsRepository.findOne({
+        _id: chatId,
+        ...this.userChatFilter(userId),
+      })
+    ).messages;
   }
 }
