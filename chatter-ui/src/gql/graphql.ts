@@ -152,8 +152,8 @@ export type ChatFragmentFragment = {
 export type MessageFragmentFragment = {
   __typename?: "Message";
   _id: string;
-  userId: string;
   content: string;
+  createdAt: any;
 };
 
 export type CreateChatMutationVariables = Exact<{
@@ -181,8 +181,8 @@ export type CreateMessageMutation = {
   createMessage: {
     __typename?: "Message";
     _id: string;
-    userId: string;
     content: string;
+    createdAt: any;
   };
 };
 
@@ -241,8 +241,8 @@ export type MessagesQuery = {
   messages: Array<{
     __typename?: "Message";
     _id: string;
-    userId: string;
     content: string;
+    createdAt: any;
   }>;
 };
 
@@ -283,8 +283,8 @@ export const MessageFragmentFragmentDoc = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "_id" } },
-          { kind: "Field", name: { kind: "Name", value: "userId" } },
           { kind: "Field", name: { kind: "Name", value: "content" } },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
         ],
       },
     },
@@ -425,8 +425,8 @@ export const CreateMessageDocument = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "_id" } },
-          { kind: "Field", name: { kind: "Name", value: "userId" } },
           { kind: "Field", name: { kind: "Name", value: "content" } },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
         ],
       },
     },
@@ -691,8 +691,8 @@ export const MessagesDocument = {
         kind: "SelectionSet",
         selections: [
           { kind: "Field", name: { kind: "Name", value: "_id" } },
-          { kind: "Field", name: { kind: "Name", value: "userId" } },
           { kind: "Field", name: { kind: "Name", value: "content" } },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
         ],
       },
     },
