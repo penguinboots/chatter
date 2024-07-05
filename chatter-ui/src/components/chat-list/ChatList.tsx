@@ -29,7 +29,7 @@ export default function ChatList() {
           }}
         >
           {data?.chats.map((chat) => (
-            <ChatListItem name={chat.name || ""} />
+            <ChatListItem chat={chat} />
           ))}
         </List>
       </Stack>
